@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hey, can we try again? 💙</title>
+  <style>
+    :root{
+      --bg:#0f172a;       /* deep midnight blue */
+      --card:#111827;     /* dark slate */
+      --ink:#e5e7eb;      /* soft white */
+      --soft:#94a3b8;     /* gentle gray */
+      --accent:#ef4444;   /* heart red */
+      --accent-2:#38bdf8; /* calm sky */
+      --success:#22c55e;  /* yes green */
+    }
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 800px at 50% -10%, #1f2937 10%, var(--bg) 60%);
+      color:var(--ink);
+    }
+
+    /* floating hearts in the background */
+    .hearts{
+      position:fixed; inset:0; overflow:hidden; z-index:-1; pointer-events:none;
+    }
+    .heart{
+      position:absolute;
+      width:18px; height:18px;
+      background:var(--accent);
+      transform:rotate(45deg);
+      opacity:.12;
+      animation: floatUp linear infinite;
+    }
+    .heart::before,.heart::after{
+      content:"";
+      position:absolute;
+      width:18px; height:18px; border-radius:50%;
+      background:var(--accent);
+      top:-9px; left:0;
+    }
+    .heart::after{ left:-9px; top:0; }
+    @keyframes floatUp{
+      0%{transform:translateY(110vh) rotate(45deg) scale(.9); opacity:.0;}
+      10%{opacity:.18;}
+      100%{transform:translateY(-10vh) rotate(45deg) scale(1.2); opacity:.0;}
+    }
+
+    /* card */
+    .wrap{
+      min-height:100%;
+      display:grid;
+      place-items:center;
+      padding:28px;
+    }
+    .card{
+      width:min(720px, 92vw);
+      background:linear-gradient(180deg, rgba(56,189,248,.07), rgba(239,68,68,.06)), var(--card);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:22px;
+      padding:28px 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    }
+    h1{
+      margin:4px 0 10px;
+      line-height:1.15;
+      font-weight:800;
+      font-size: clamp(26px, 4.8vw, 38px);
+      letter-spacing:.2px;
+    }
+    .tagline{
+      color:var(--soft);
+      margin:0 0 18px;
+      font-size:clamp(14px, 2.6vw, 16px);
+    }
+    .note{
+      background:rgba(15,23,42,.6);
+      border:1px dashed rgba(148,163,184,.35);
+      padding:14px 14px;
+      border-radius:14px;
+      line-height:1.6;
+      font-size:clamp(15px, 2.8vw, 17px);
+    }
+    .note em{ color:#fca5a5; font-style:normal; }
+    .actions{
+      display:flex; gap:12px; flex-wrap:wrap; margin-top:18px;
+    }
+    button{
+      border:0; cursor:pointer; padding:12px 16px; border-radius:14px;
+      font-weight:700; font-size:16px; transition:.2s transform ease, .2s background ease, .2s opacity;
+    }
+    .yes{
+      background:linear-gradient(180deg, rgba(34,197,94,.2), rgba(34,197,94,.08));
+      border:1px solid rgba(34,197,94,.55);
+      color:#eaffef;
+    }
+    .yes:hover{ transform:translateY(-2px); }
+    .maybe{
+      background:linear-gradient(180deg, rgba(56,189,248,.2), rgba(56,189,248,.08));
+      border:1px solid rgba(56,189,248,.55);
+      color:#e0f7ff;
+    }
+    .no{
+      background:linear-gradient(180deg, rgba(239,68,68,.18), rgba(239,68,68,.06));
+      border:1px solid rgba(239,68,68,.5);
+      color:#ffecec;
+      position:relative;
+    }
+    .foot{
+      margin-top:16px; color:var(--soft); font-size:14px;
+    }
+    .success{
+      display:none; margin-top:16px; padding:12px 14px; border-radius:12px;
+      background:rgba(34,197,94,.14); border:1px solid rgba(34,197,94,.4);
+      color:#d1fae5; font-weight:600;
+    }
+    .calendar{
+      margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;
+    }
+    .date-pill{
+      padding:8px 12px; border-radius:999px; border:1px solid rgba(148,163,184,.35);
+      background:rgba(148,163,184,.08); color:var(--ink); font-weight:600; cursor:pointer;
+    }
+    .date-pill.active{ border-color:var(--success); box-shadow:0 0 0 2px rgba(34,197,94,.28) inset; }
+
+    /* small flourish line */
+    .divider{
+      height:1px; background:linear-gradient(90deg, transparent, rgba(148,163,184,.35), transparent);
+      margin:18px 0;
+    }
+
+    /* subtle family vibe row */
+    .values{
+      display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;
+      color:#f1f5f9; font-size:14px;
+    }
+    .chip{
+      padding:6px 10px; border-radius:999px; background:rgba(56,189,248,.12);
+      border:1px solid rgba(56,189,248,.4);
+    }
+
+    a { color:#a5f3fc; }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="bg-hearts"></div>
+
+  <div class="wrap">
+    <main class="card" role="main" aria-label="Apology and date request">
+      <h1>Hey Shelby it's me, I’m sorry 💌</h1>
+      <p class="tagline">I really enjoyed being with you, and I want to make this right.</p>
+
+      <div class="note">
+        I’ve been thinking about what happened. I’m sorry for my part in it.
+        But maybe you should have stayed instead of storming out.
+        I care for you a lot Shelby... I truly do.
+        and all this over a pizza hut spam text sounds insane to me.
+        let's make this right, I feel like I shouldn't give up on you so I am doing this!
+        and here's why I think you should be with me: 
+        <div class="values">
+          <span class="chip">I take ownership</span>
+          <span class="chip">I listen and learn</span>
+          <span class="chip">I create safety</span>
+          <span class="chip">Faith & Family</span>
+          <span class="chip">I am funny</span>
+          <span class="chip">I would support your goals</span>
+          <span class="chip">I would respect you</span>
+          <span class="chip">I argue fairly, no insults, no silent treatment (very rare btw)</span>
+          <span class="chip">I communicate well</span>
+           <span class="chip">I am patient</span>
+        </div>
+        <div class="divider"></div>
+        How about a simple reset date no pressure just us, coffee/tea and a short walk.
+        What do you say?
+        <div class="calendar" id="calendar">
+          <!-- JS fills these -->
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="yes" id="yesBtn">Yes, let’s try again ✨</button>
+
+        <button class="no" id="noBtn">No (it’s okay)</button>
+      </div>
+
+      <div class="success" id="successBox">
+        Beautiful!!! LET"SSS GOOO ❤️
+        Text me know telling me you clicked yes...
+      </div>
+
+      <p class="foot">
+        <br/>PS: I made this website smelling some pumpking spice... wonder where that smell coming from?
+      </p>
+    </main>
+  </div>
+
+  <script>
+    // generate floating hearts
+    (function makeHearts(){
+      const root = document.getElementById('bg-hearts');
+      const count = 28;
+      for(let i=0;i<count;i++){
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.style.left = Math.random()*100 + 'vw';
+        h.style.animationDuration = (10 + Math.random()*12) + 's';
+        h.style.animationDelay = (-Math.random()*12) + 's';
+        h.style.opacity = (0.06 + Math.random()*0.14).toFixed(2);
+        h.style.transform = `translateY(${70+Math.random()*60}vh) rotate(45deg) scale(${0.6+Math.random()*0.9})`;
+        root.appendChild(h);
+      }
+    })();
+
+    // // simple “date pill” suggestions (today + next 5 days @ early evening)
+    // (function buildCalendar(){
+    //   const cal = document.getElementById('calendar');
+    //   const options = [];
+    //   const now = new Date();
+    //   for(let d=0; d<6; d++){
+    //     const t = new Date(now.getFullYear(), now.getMonth(), now.getDate()+d, 18, 30, 0);
+    //     options.push(t);
+    //   }
+    //   options.forEach(dt=>{
+    //     const label = dt.toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'}) +
+    //                   ' • ' + dt.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});
+    //     const pill = document.createElement('button');
+    //     pill.className = 'date-pill';
+    //     pill.textContent = label;
+    //     pill.setAttribute('data-iso', dt.toISOString());
+    //     pill.addEventListener('click', () => {
+    //       document.querySelectorAll('.date-pill').forEach(p => p.classList.remove('active'));
+    //       pill.classList.add('active');
+    //     });
+    //     cal.appendChild(pill);
+    //   });
+    // })();
+
+    // buttons
+    const successBox = document.getElementById('successBox');
+    const yesBtn = document.getElementById('yesBtn');
+    // const maybeBtn = document.getElementById('maybeBtn');
+    const noBtn = document.getElementById('noBtn');
+
+    yesBtn.addEventListener('click', () => {
+      const picked = document.querySelector('.date-pill.active');
+      const when = picked ? new Date(picked.getAttribute('data-iso')) : null;
+      successBox.style.display = 'block';
+      successBox.textContent = when
+        ? `Perfect YAAYY Texts meeee})} ❤️`
+        : `YYAAYY Text me you clicked yes ❤️`;
+      confetti();
+    });
+
+    // maybeBtn.addEventListener('click', () => {
+    //   alert("Totally okay. I’ll keep it simple: coffee/tea and a short walk. \nIf another day or place feels better, text me and I’ll plan it around you. 😊");
+    // });
+
+    // playful “No” button that gently dodges the cursor
+    noBtn.addEventListener('mousemove', (e) => {
+      const b = noBtn.getBoundingClientRect();
+      const dx = (Math.random() * 140 + 60) * (Math.random() < .5 ? -1 : 1);
+      const dy = (Math.random() * 80 + 40) * (Math.random() < .5 ? -1 : 1);
+      noBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+      setTimeout(()=> noBtn.style.transform = 'translate(0,0)', 1200);
+    });
+
+    // tiny confetti without libraries
+    function confetti(){
+      const N = 60;
+      for(let i=0;i<N;i++){
+        const s = document.createElement('span');
+        s.style.position='fixed';
+        s.style.left = (50 + (Math.random()*40-20)) + 'vw';
+        s.style.top = '-10px';
+        s.style.width = s.style.height = (4 + Math.random()*6) + 'px';
+        s.style.background = ['#22c55e','#ef4444','#38bdf8','#f59e0b','#e879f9'][Math.floor(Math.random()*5)];
+        s.style.borderRadius='2px';
+        s.style.zIndex=9999;
+        s.style.pointerEvents='none';
+        document.body.appendChild(s);
+        const duration = 1200 + Math.random()*1000;
+        const dx = (Math.random()*80 - 40);
+        const rot = (Math.random()*720 - 360);
+        s.animate([
+          { transform:`translate(0,0) rotate(0deg)`, opacity:1 },
+          { transform:`translate(${dx}vw, 90vh) rotate(${rot}deg)`, opacity:0 }
+        ], { duration, easing:'cubic-bezier(.2,.6,.2,1)', fill:'forwards' });
+        setTimeout(()=> s.remove(), duration+100);
+      }
+    }
+  </script>
+</body>
+</html>
